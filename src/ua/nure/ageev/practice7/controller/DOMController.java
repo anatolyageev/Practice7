@@ -138,8 +138,8 @@ public class DOMController {
         gun.setMaterial(Material.fromValue(qElement.getElementsByTagName(Names.MATERIAL).
                 item(0).getTextContent()));
 
-        System.out.println(qElement.getElementsByTagName(Names.PERFOMANCE_CHARACTERISTICS).item(0).getNodeName());
-        System.out.println(qElement.getChildNodes());
+       // System.out.println(qElement.getElementsByTagName(Names.PERFOMANCE_CHARACTERISTICS).item(0).getNodeName());
+      //  System.out.println(qElement.getChildNodes());
         NodeList fd = qElement.getElementsByTagName(Names.PERFOMANCE_CHARACTERISTICS).item(0).getChildNodes();
 
 //        for(int i =0; i< fd.getLength();i++) {
@@ -184,7 +184,7 @@ public class DOMController {
                 pc.setOptician(Boolean.parseBoolean(node.getTextContent()));
             } else if (node.getNodeName().equals(Names.RANGE)) {
                 NodeList nl = node.getChildNodes();
-                System.out.println(nl.getLength());
+              //  System.out.println(nl.getLength());
                 pc.setRange(getRengeInfo(nl));
             }
         }

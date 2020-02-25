@@ -2,6 +2,7 @@ package ua.nure.ageev.practice7;
 
 import ua.nure.ageev.practice7.controller.DOMController;
 import ua.nure.ageev.practice7.controller.SAXController;
+import ua.nure.ageev.practice7.controller.STAXController;
 import ua.nure.ageev.practice7.entity.Firearms;
 import ua.nure.ageev.practice7.util.Sorter;
 
@@ -61,22 +62,22 @@ public class Main {
 		DOMController.saveToXML(firearms, outputXmlFile);
 		System.out.println("Output ==> " + outputXmlFile);
 
-//		////////////////////////////////////////////////////////
-//		// StAX
-//		////////////////////////////////////////////////////////
-//
-//		// get
-//		STAXController staxController = new STAXController(xmlFileName);
-//		staxController.parse();
-//		test = staxController.getTest();
-//
-//		// sort (case 3)
-//		Sorter.sortAnswersByContent(test);
-//
-//		// save
-//		outputXmlFile = "output.stax.xml";
-//		DOMController.saveToXML(test, outputXmlFile);
-//		System.out.println("Output ==> " + outputXmlFile);
+		////////////////////////////////////////////////////////
+		// StAX
+		////////////////////////////////////////////////////////
+
+		// get
+		STAXController staxController = new STAXController(xmlFileName);
+		staxController.parse();
+        firearms = staxController.getFirearms();
+
+		// sort (case 3)
+		Sorter.sortSortGunsByOrigin(firearms);
+
+		// save
+		outputXmlFile = "output.stax.xml";
+		DOMController.saveToXML(firearms, outputXmlFile);
+		System.out.println("Output ==> " + outputXmlFile);
 	}
 
 }
