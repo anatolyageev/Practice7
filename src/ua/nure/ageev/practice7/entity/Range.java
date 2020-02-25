@@ -81,8 +81,12 @@ public class Range {
 
     @Override
     public String toString() {
-        Number l = null;
+        if(((JAXBElement)shortRangeOrMiddleRangeOrLongRange).getValue()==null){
+            return "Nul";
+        }
+        Number l = 0;
         Object wrapped = ((JAXBElement)shortRangeOrMiddleRangeOrLongRange).getValue();
+     //   Object wrapped = shortRangeOrMiddleRangeOrLongRange.getValue();
         if(wrapped.getClass() == BigInteger.class){
              l = (BigInteger)wrapped;
         }

@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 
+import static sun.security.krb5.Confounder.intValue;
+
 /**
  * Controller for DOM parser.
  *
@@ -99,7 +101,7 @@ public class DOMController {
 
         // process questions nodes
         for (int j = 0; j < gunNodes.getLength(); j++) {
-            //          Gun gun = gunNodes.item(j);
+            Gun gun = getGun(gunNodes.item(j));
             // add question to container
             firearms.getGun().add(gun);
         }
@@ -136,8 +138,16 @@ public class DOMController {
         gun.setMaterial(Material.fromValue(qElement.getElementsByTagName(Names.MATERIAL).
                 item(0).getTextContent()));
 
-        gun.setPerformanceCharacteristics(getPerfChar(qElement.getElementsByTagName(Names.PERFOMANCE_CHARACTERISTICS).
-                item(0).getChildNodes()));
+        System.out.println(qElement.getElementsByTagName(Names.PERFOMANCE_CHARACTERISTICS).item(0).getNodeName());
+        System.out.println(qElement.getChildNodes());
+        NodeList fd = qElement.getElementsByTagName(Names.PERFOMANCE_CHARACTERISTICS).item(0).getChildNodes();
+
+//        for(int i =0; i< fd.getLength();i++) {
+//            System.out.println(fd.item(i).getNodeName());
+//        }
+      //  Node dl = (Node)qElement.getElementsByTagName(Names.PERFOMANCE_CHARACTERISTICS).item(0);
+
+       gun.setPerformanceCharacteristics(getPerfChar(fd));
 
         // process question text
 //        Node qtNode = qElement.getElementsByTagName(Names.QUESTION_TEXT)
@@ -172,8 +182,10 @@ public class DOMController {
                 pc.setClip(Boolean.parseBoolean(node.getTextContent()));
             } else if (node.getNodeName().equals(Names.OPTICAL)) {
                 pc.setOptician(Boolean.parseBoolean(node.getTextContent()));
-            } else{
-                pc.setRange(getRengeInfo(node.getChildNodes()));
+            } else if (node.getNodeName().equals(Names.RANGE)) {
+                NodeList nl = node.getChildNodes();
+                System.out.println(nl.getLength());
+                pc.setRange(getRengeInfo(nl));
             }
         }
         return pc;
@@ -181,12 +193,14 @@ public class DOMController {
 
     private static Range getRengeInfo(NodeList nodeList) {
         Range range = new Range();
-        if (nodeList.item(0).equals(Names.SHORT_RANGE)) {
-            range.setShortRangeOrMiddleRangeOrLongRange(of.createRangeShortRange(Integer.parseInt(nodeList.item(0).getTextContent())));
-        } else if (nodeList.item(0).equals(Names.MIDDLE_RANGE)) {
-            range.setShortRangeOrMiddleRangeOrLongRange(of.createRangeMiddleRange(Integer.parseInt(nodeList.item(0).getTextContent())));
-        }else{
-            range.setShortRangeOrMiddleRangeOrLongRange(of.createRangeLongRange(BigInteger.valueOf(Long.parseLong(nodeList.item(0).getTextContent()))));
+        for(int i =0; i < nodeList.getLength();i++) {
+            if (nodeList.item(i).getNodeName().equals(Names.SHORT_RANGE)) {
+                range.setShortRangeOrMiddleRangeOrLongRange(of.createRangeShortRange(Integer.parseInt(nodeList.item(i).getTextContent().trim())));
+            } else if (nodeList.item(i).getNodeName().equals(Names.MIDDLE_RANGE)) {
+                range.setShortRangeOrMiddleRangeOrLongRange(of.createRangeMiddleRange(Integer.parseInt(nodeList.item(i).getTextContent().trim())));
+            } else if (nodeList.item(i).getNodeName().equals(Names.LONG_RANGE))  {
+                range.setShortRangeOrMiddleRangeOrLongRange(of.createRangeLongRange(BigInteger.valueOf(Long.parseLong(nodeList.item(i).getTextContent().trim()))));
+            }
         }
         return range;
     }
@@ -257,56 +271,94 @@ public class DOMController {
             rElement.appendChild(qElement);
 
             // add question text
-            Element qtElement =  document.createElement(Names.MODEL);
+            Element qtElement = document.createElement(Names.MODEL);
             qtElement.setTextContent(gun.getModel());
             qElement.appendChild(qtElement);
 
-            qtElement =  document.createElement(Names.HANDY);
+            qtElement = document.createElement(Names.HANDY);
             qtElement.setTextContent(gun.getHandy().toString());
             qElement.appendChild(qtElement);
 
-            qtElement =  document.createElement(Names.ORIGIN);
+            qtElement = document.createElement(Names.ORIGIN);
             qtElement.setTextContent(gun.getOrigin());
             qElement.appendChild(qtElement);
 
             PerformanceCharacteristics perc = gun.getPerformanceCharacteristics();
 
-            Element pcElement =  document.createElement(Names.PERFOMANCE_CHARACTERISTICS);
+            Element pcElement = document.createElement(Names.PERFOMANCE_CHARACTERISTICS);
             qElement.appendChild(pcElement);
 
             Element rgElement = document.createElement(Names.RANGE);
             pcElement.appendChild(rgElement);
+            Element crElement;
+            Range re = perc.getRange();
+            Integer r = getRangeVal(perc.getRange()).intValue();
+            if (r < 500) {
+                crElement = document.createElement(Names.SHORT_RANGE);
+            } else if (r >= 500 && r < 1000) {
+                crElement = document.createElement(Names.MIDDLE_RANGE);
+            } else {
+                crElement = document.createElement(Names.LONG_RANGE);
+            }
+            crElement.setTextContent(r.toString());
+            rgElement.appendChild(crElement);
 
-            if(perc.getRange())
+            crElement = document.createElement(Names.TARGET_ANGE);
+            crElement.setTextContent(perc.getTargetAnge().toString());
+            pcElement.appendChild(crElement);
 
+            crElement = document.createElement(Names.CLIP);
+            crElement.setTextContent(Boolean.toString(perc.isClip()));
+            pcElement.appendChild(crElement);
 
+            crElement = document.createElement(Names.OPTICAL);
+            crElement.setTextContent(Boolean.toString(perc.isOptician()));
+            pcElement.appendChild(crElement);
+
+            qtElement = document.createElement(Names.MATERIAL);
+            qtElement.setTextContent(gun.getMaterial().value());
+            qElement.appendChild(qtElement);
 
             // add answers
-            for (Answer answer : question.getAnswers()) {
-                Element aElement = document.createElement(Names.ANSWER);
-                aElement.setTextContent(answer.getContent());
-
-                // set attribute
-                if (answer.isCorrect()) {
-                    aElement.setAttribute(Names.CORRECT, "true");
-                }
-                qElement.appendChild(aElement);
-            }
         }
 
         return document;
     }
 
-    public Number getRangeVal(Range range){
-        Number l=0;
-        Object wrapped = ((JAXBElement)shortRangeOrMiddleRangeOrLongRange).getValue();
-        if(wrapped.getClass() == BigInteger.class){
-            l = (BigInteger)wrapped;
-        }
-        else {
+    public static Number getRangeVal(Range range) {
+        Number l = 0;
+        Object wrapped = range.getShortRangeOrMiddleRangeOrLongRange().getValue();
+        if (wrapped.getClass() == BigInteger.class) {
+            l = (BigInteger) wrapped;
+        } else {
             l = (Integer) wrapped;
         }
         return l;
     }
+    public static void main(String[] args) throws Exception {
 
+        // try to parse NOT valid XML document with validation on (failed)
+        DOMController domContr = new DOMController(Constants.VALID_XML_FILE);
+        try {
+            // parse with validation (failed)
+            domContr.parse(true);
+        } catch (SAXException ex) {
+            System.err.println("====================================");
+            System.err.println("XML not valid");
+            System.err.println("Test object --> " + domContr.getFirearms());
+            System.err.println("====================================");
+        }
+
+        // try to parse NOT valid XML document with validation off (success)
+        domContr.parse(false);
+
+        // we have Test object at this point:
+        System.out.println("====================================");
+        System.out.print("Here is the test: \n" + domContr.getFirearms());
+        System.out.println("====================================");
+
+        // save test in XML file
+        Firearms test = domContr.getFirearms();
+        DOMController.saveToXML(test, Constants.VALID_XML_FILE + ".dom-result.xml");
+    }
 }
