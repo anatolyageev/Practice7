@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p7:Firearms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:p7="http://nure.ua/Firearms/p7"
+         xsi:schemaLocation="http://nure.ua/Firearms/p7 input.xsd">
+
+<!--<Firearms>-->
+    <Gun>
+        <Model>AK-47</Model>
+        <Handy>one-handed</Handy>
+        <Origin>Russia</Origin>
+        <performance_characteristics>
+            <range>
+                <short_range>100</short_range>
+            </range>
+            <target_ange >2000</target_ange>
+            <clip>true</clip>
+            <optician>true</optician>
+        </performance_characteristics>
+        <Material>steel</Material>
+    </Gun>
+    <Gun>
+        <Model>M-16</Model>
+        <Handy>one-handed</Handy>
+        <Origin>USA</Origin>
+        <performance_characteristics>
+            <range>
+                <middle_range>
+                    999
+                </middle_range>
+            </range>
+            <target_ange >3000</target_ange>
+            <clip>false</clip>
+            <optician>false</optician>
+        </performance_characteristics>
+        <Material>composite</Material>
+    </Gun>
+    <Gun>
+        <Model>QBZ-95</Model>
+        <Handy>two-handed</Handy>
+        <Origin>China</Origin>
+        <performance_characteristics>
+            <range>
+                <long_range>2000</long_range>
+            </range>
+            <target_ange >4000</target_ange>
+            <clip>true</clip>
+            <optician>true</optician>
+        </performance_characteristics>
+        <Material>steel</Material>
+    </Gun>
+
+</p7:Firearms>
+<!--</Firearms>-->

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Firearms" type="FirearmsType">
+    <xs:annotation>
+      <xs:documentation>ь ь ьбб&lt;p7:Firearms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"xmlns:p7="http://nure.ua/Firearms/p7"xsi:schemaLocation="http://nure.ua/Firearms/p7 input.xsd"></xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:complexType name="rangeType">
+    <xs:simpleContent>
+      <xs:extension base="xs:short">
+        <xs:attribute type="xs:string" name="cat" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+
+  <xs:complexType name="performance_characteristicsType">
+    <xs:sequence>
+      <xs:element type="rangeType" name="range"/>
+      <xs:element name="target_ange">
+        <xs:simpleType>
+          <xs:restriction base="xs:short">
+            <xs:enumeration value="2000"/>
+            <xs:enumeration value="3000"/>
+            <xs:enumeration value="4000"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="clip">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="true"/>
+            <xs:enumeration value="false"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="optician">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="true"/>
+            <xs:enumeration value="false"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GunType">
+    <xs:sequence>
+      <xs:element name="Model">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="AK-47"/>
+            <xs:enumeration value="M-16"/>
+            <xs:enumeration value="QBZ-95"/>
+            <xs:enumeration value="QBZ-96"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Handy">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="one-handed"/>
+            <xs:enumeration value="two-handed"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Origin">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="Russia"/>
+            <xs:enumeration value="USA"/>
+            <xs:enumeration value="China"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="performance_characteristicsType" name="performance_characteristics"/>
+      <xs:element name="Material">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="steel"/>
+            <xs:enumeration value="composite"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FirearmsType">
+    <xs:sequence>
+      <xs:element type="GunType" name="Gun" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

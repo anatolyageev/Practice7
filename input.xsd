@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://nure.ua/Firearms/p7"
+        xmlns:tns="http://nure.ua/Firearms/p7">
+
+    <element name="Firearms">
+        <complexType>
+            <sequence>
+                <element name="Gun" type="tns:gun" minOccurs="1" maxOccurs="unbounded"/>
+            </sequence>
+        </complexType>
+    </element>
+
+    <complexType name="gun">
+        <all>
+            <element name="Model" type="string"/>
+            <element name="Handy" type="tns:handy"/>
+            <element name="Origin" type="string"/>
+            <element name="performance_characteristics" type="tns:Performance_characteristics"/>
+            <element name="Material" type="tns:material"/>
+        </all>
+    </complexType>
+
+    <complexType name="Performance_characteristics">
+        <sequence>
+            <element name="range" type="tns:Range"/>
+            <element name="target_ange" type="integer"/>
+            <element name="clip" type="boolean"/>
+            <element name="optician" type="boolean"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="Range">
+        <choice>
+            <element name="short_range" type="tns:short_range"/>
+            <element name="middle_range" type="tns:middle_range"/>
+            <element name="long_range" type="tns:long_range"/>
+        </choice>
+    </complexType>
+
+    <simpleType name="short_range">
+        <restriction base="integer">
+            <minInclusive value="0"/>
+            <maxInclusive value="499"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="middle_range">
+        <restriction base="integer">
+            <minInclusive value="500"/>
+            <maxInclusive value="999"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="long_range">
+            <restriction base="integer">
+                <minInclusive value="1000"/>
+            </restriction>
+    </simpleType>
+
+
+    <simpleType name="handy">
+        <restriction base="string">
+            <enumeration value="one-handed"/>
+            <enumeration value="two-handed"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="material">
+        <restriction base="string">
+            <enumeration value="steel"/>
+            <enumeration value="composite"/>
+        </restriction>
+    </simpleType>
+
+
+</schema>
