@@ -1,9 +1,14 @@
 package ua.nure.ageev.practice7;
 
+import ua.nure.ageev.practice7.controller.DOMController;
+import ua.nure.ageev.practice7.controller.SAXController;
+import ua.nure.ageev.practice7.entity.Firearms;
+import ua.nure.ageev.practice7.util.Sorter;
+
 /**
- * Entry point for st3 example (simple version).
+ * Entry point for practice 7.
  * 
- * @author D.Kolesnikov
+ * @author A. Ageev
  *
  */
 public class Main {
@@ -25,37 +30,37 @@ public class Main {
 		////////////////////////////////////////////////////////
 
 		// get
-//		DOMController domController = new DOMController(xmlFileName);
-//		domController.parse(true);
-//		Test test = domController.getTest();
-//
-//		// sort (case 1)
-//		Sorter.sortQuestionsByQuestionText(test);
-//
-//		// save
-//		String outputXmlFile = "output.dom.xml";
-//		DOMController.saveToXML(test, outputXmlFile);
-//		System.out.println("Output ==> " + outputXmlFile);
-//
-//		////////////////////////////////////////////////////////
-//		// SAX
-//		////////////////////////////////////////////////////////
-//
-//		// get
-//		SAXController saxController = new SAXController(xmlFileName);
-//		saxController.parse(true);
-//		test = saxController.getTest();
-//
-//		// sort (case 2)
-//		Sorter.sortQuestionsByAnswersNumber(test);
-//
-//		// save
-//		outputXmlFile = "output.sax.xml";
-//
-//		// other way:
-//		DOMController.saveToXML(test, outputXmlFile);
-//		System.out.println("Output ==> " + outputXmlFile);
-//
+		DOMController domController = new DOMController(xmlFileName);
+		domController.parse(true);
+		Firearms firearms = domController.getFirearms();
+
+		// sort (case 1)
+		Sorter.sortGunsByModel(firearms);
+
+		// save
+		String outputXmlFile = "output.dom.xml";
+		DOMController.saveToXML(firearms, outputXmlFile);
+		System.out.println("Output ==> " + outputXmlFile);
+
+		////////////////////////////////////////////////////////
+		// SAX
+		////////////////////////////////////////////////////////
+
+		// get
+		SAXController saxController = new SAXController(xmlFileName);
+		saxController.parse(true);
+		firearms = saxController.getFirearms();
+
+		// sort (case 2)
+		Sorter.sortSortGunsByMaterial(firearms);
+
+		// save
+		outputXmlFile = "output.sax.xml";
+
+		// other way:
+		DOMController.saveToXML(firearms, outputXmlFile);
+		System.out.println("Output ==> " + outputXmlFile);
+
 //		////////////////////////////////////////////////////////
 //		// StAX
 //		////////////////////////////////////////////////////////
